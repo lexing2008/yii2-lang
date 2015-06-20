@@ -28,7 +28,7 @@ Configuration
 
 Set in Configuration File:
 
-```php
+```
 'urlManager' => [
   'class' => 'xfg\lang\UrlManager',
   'showScriptName' => false,
@@ -39,15 +39,17 @@ Set in Configuration File:
     'en' => 'en-US',
     'ru' => 'ru-RU',
   ]
-]```
+]
+```
 
 Usage
 -----
 
 Add in any view:
 
-```php
+```
 use xfg\lang\LanguageSwitcher;
 use xfg\bootstrapLanguages\BootstrapLanguagesAsset;
 BootstrapLanguagesAsset::register($this);
-echo LanguageSwitcher::widget()```
+echo LanguageSwitcher::widget()
+```
