@@ -51,5 +51,5 @@ Add in any view:
 use xfg\lang\widgets\LanguageSwitcher;
 use xfg\bootstrapLanguages\BootstrapLanguagesAsset;
 BootstrapLanguagesAsset::register($this);
-echo LanguageSwitcher::widget()
+echo LanguageSwitcher::widget();
 ```
