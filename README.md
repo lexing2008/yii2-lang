@@ -30,7 +30,7 @@ Set in Configuration File:
 
 ```
 'urlManager' => [
-  'class' => 'xfg\lang\UrlManager',
+  'class' => 'xfg\lang\components\UrlManager',
   'showScriptName' => false,
   'enablePrettyUrl' => true,
   'enableStrictParsing' => true,
@@ -48,7 +48,7 @@ Usage
 Add in any view:
 
 ```
-use xfg\lang\LanguageSwitcher;
+use xfg\lang\widgets\LanguageSwitcher;
 use xfg\bootstrapLanguages\BootstrapLanguagesAsset;
 BootstrapLanguagesAsset::register($this);
 echo LanguageSwitcher::widget()
