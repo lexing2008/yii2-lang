@@ -5,21 +5,22 @@ Multi language url manager
 Installation
 ------------
 
-The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
-
-Either run
+Add to composer.json
 
 ```
-php composer.phar require --prefer-dist xfg/yii2-lang "*"
+"repositories":[
+  {
+    "type": "git",
+    "url": "https://github.com/xfg/yii2-lang.git"
+  }
+]
 ```
 
-or add
+and run
 
 ```
-"xfg/yii2-lang": "*"
+php composer.phar require --prefer-dist xfg/yii2-lang "dev-master"
 ```
-
-to the require section of your `composer.json` file.
 
 
 Configuration
@@ -43,8 +44,10 @@ Set in Configuration File:
 Usage
 -----
 
-In any view add:
+Add in any view:
 
 ```php
-<?php use xfg\lang\LanguageSwitcher ?>
-<?= LanguageSwitcher::widget() ?>```
+use xfg\lang\LanguageSwitcher;
+use xfg\bootstrapLanguages\BootstrapLanguagesAsset;
+BootstrapLanguagesAsset::register($this);
+echo LanguageSwitcher::widget()```
