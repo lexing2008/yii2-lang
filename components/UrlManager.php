@@ -1,5 +1,11 @@
 <?php
-namespace xfg\lang\components;
+/**
+ * @link http://thecombats.com/
+ * @copyright Copyright (c) 2014 The Combats
+ * @license proprietary/closed-source
+ */
+
+namespace app\modules\core\web;
 
 use Yii;
 
@@ -11,15 +17,16 @@ class UrlManager extends \yii\web\UrlManager
   /**
    * @var array Supported languages
    */
-  public $languages;
-  /**
-   * @var bool Whether to display the source app language in the URL
-   */
-  public $displaySourceLanguage = false;
+  public $languages = [];
   /**
    * @var string Parameter used to set the language
    */
   public $languageParam = 'lang';
+
+  /**
+   * @inheritdoc
+   */
+  private $_ruleCache;
 
 
   /**
@@ -70,51 +77,77 @@ class UrlManager extends \yii\web\UrlManager
   }
 
   /**
-   * Adds language functionality to URL creation
-   * @param array|string $params
-   * @return string
+   * @inheritdoc
    */
   public function createUrl($params)
   {
-    $url = parent::createUrl($params);
-    if (array_key_exists($this->languageParam, $params)) {
-      $language = $params[$this->languageParam];
-      if (
-        array_key_exists($language, $this->languages)
-        && (
-          $language !== Yii::$app->sourceLanguage
-          || $this->displaySourceLanguage
-        )
-      ) {
-        if ($this->enablePrettyUrl) {
-          $str = '/' . $language . $url;
+    $params = (array) $params;
+    $defaultLanguage = array_search(Yii::$app->language, $this->languages);
+    $language = isset($params[$this->languageParam]) ? $params[$this->languageParam] : $defaultLanguage;
+    $anchor = isset($params['#']) ? '#' . $params['#'] : '';
+    unset($params[$this->languageParam], $params['#'], $params[$this->routeParam]);
+
+    $route = trim($params[0], '/');
+    unset($params[0]);
+
+    $baseUrl = $this->showScriptName || !$this->enablePrettyUrl ? $this->getScriptUrl() : $this->getBaseUrl();
+
+    if ($this->enablePrettyUrl) {
+        $cacheKey = $route . '?' . implode('&', array_keys($params));
+
+        /* @var $rule UrlRule */
+        $url = false;
+        if (isset($this->_ruleCache[$cacheKey])) {
+            foreach ($this->_ruleCache[$cacheKey] as $rule) {
+                if (($url = $rule->createUrl($this, $route, $params)) !== false) {
+                    break;
+                }
+            }
         } else {
-          $r = explode($this->routeParam, $url, 2);
-          $route = urlencode($language . '/') . substr($r[1], 1);
-          $pos = strpos($url, $this->routeParam) + strlen($this->routeParam) + 1;
-          $str = substr_replace($url, $route, $pos, strlen($route));
+            $this->_ruleCache[$cacheKey] = [];
         }
-        $pattern = '/(\?|&)' . $this->languageParam . '=' . $language . '/';
-        $url = preg_replace($pattern, '', $str);
-      }
+
+        if ($url === false) {
+            foreach ($this->rules as $rule) {
+                if (($url = $rule->createUrl($this, $route, $params)) !== false) {
+                    $this->_ruleCache[$cacheKey][] = $rule;
+                    break;
+                }
+            }
+        }
+
+        if ($url !== false) {
+            if (strpos($url, '://') !== false) {
+                if ($baseUrl !== '' && ($pos = strpos($url, '/', 8)) !== false) {
+                    $path = rtrim('/' . $language . substr($url, $pos));
+                    return substr($url, 0, $pos) . $baseUrl  . $path . $anchor;
+                } else {
+                    return $url . $baseUrl . rtrim('/' . $language) . $anchor;
+                }
+            } else {
+              $url = trim($language . '/' . $url, '/');
+              return "$baseUrl/{$url}{$anchor}";
+            }
+        }
+
+        if ($this->suffix !== null) {
+            $route .= $this->suffix;
+        }
+        if (!empty($params) && ($query = http_build_query($params)) !== '') {
+            $route .= '?' . $query;
+        }
+
+        $route = trim($language . '/' . $route, '/');
+
+        return "$baseUrl/{$route}{$anchor}";
     } else {
-      if (
-        (
-          Yii::$app->language !== Yii::$app->sourceLanguage
-          || $this->displaySourceLanguage
-        )
-      ) {
-        $language = array_search(Yii::$app->language, $this->languages);
-        if ($this->enablePrettyUrl) {
-          $url = '/' . $language . $url;
-        } else {
-          $r = explode($this->routeParam, $url, 2);
-          $route = urlencode($language . '/') . substr($r[1], 1);
-          $pos = strpos($url, $this->routeParam) + strlen($this->routeParam) + 1;
-          $url = substr_replace($url, $route, $pos, strlen($route));
+        $route = trim($language . '/' . $route, '/');
+        $url = "$baseUrl?{$this->routeParam}=" . urlencode($route);
+        if (!empty($params) && ($query = http_build_query($params)) !== '') {
+            $url .= '&' . $query;
         }
-      }
+
+        return $url . $anchor;
     }
-    return $url;
   }
 }
