@@ -1,11 +1,5 @@
 <?php
-/**
- * @link http://thecombats.com/
- * @copyright Copyright (c) 2014 The Combats
- * @license proprietary/closed-source
- */
-
-namespace app\modules\core\web;
+namespace xfg\lang\components;
 
 use Yii;
 
