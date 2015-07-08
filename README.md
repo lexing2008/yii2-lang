@@ -34,7 +34,6 @@ Set in Configuration File:
   'showScriptName' => false,
   'enablePrettyUrl' => true,
   'enableStrictParsing' => true,
-  'displaySourceLanguage' => true,
   'languages' => [
     'en' => 'en-US',
     'ru' => 'ru-RU',
