@@ -11,7 +11,7 @@ Add to composer.json
 "repositories":[
   {
     "type": "git",
-    "url": "https://github.com/xfg/yii2-lang.git"
+    "url": "https://github.com/lexing2008/yii2-lang.git"
   }
 ]
 ```
@@ -19,7 +19,7 @@ Add to composer.json
 and run
 
 ```
-php composer.phar require --prefer-dist xfg/yii2-lang "dev-master"
+php composer.phar require --prefer-dist lexing2008/yii2-lang "dev-master"
 ```
 
 
@@ -35,8 +35,8 @@ Set in Configuration File:
   'enablePrettyUrl' => true,
   'enableStrictParsing' => true,
   'languages' => [
-    'en' => 'en-US',
-    'ru' => 'ru-RU',
+    'en',
+    'ru',
   ]
 ]
 ```
