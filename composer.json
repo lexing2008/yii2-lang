@@ -15,7 +15,7 @@
   },
   "autoload": {
     "psr-4": {
-        "lexing2008\\yii2-lang\\": ""
+        "lexing2008\\yii2Lang\\": ""
     }
   }
 }
