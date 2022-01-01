@@ -1,5 +1,5 @@
 <?php
-namespace lexing2008\yii2-lang\components;
+namespace lexing2008\yii2Lang\components;
 
 use Yii;
 
