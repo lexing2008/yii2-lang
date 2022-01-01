@@ -1,5 +1,5 @@
 {
-  "name": "xfg/yii2-lang",
+  "name": "lexing2008/yii2-lang",
   "description": "Multi language url manager",
   "type": "yii2-extension",
   "keywords": ["yii2","extension","multi language"],
@@ -11,12 +11,11 @@
     }
   ],
   "require": {
-    "yiisoft/yii2": "*",
-    "xfg/yii2-bootstrap-languages": "1.*"
+    "yiisoft/yii2": "*"
   },
   "autoload": {
     "psr-4": {
-        "xfg\\lang\\": ""
+        "lexing2008\\yii2-lang\\": ""
     }
   }
 }
