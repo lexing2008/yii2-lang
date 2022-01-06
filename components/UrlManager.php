@@ -23,7 +23,7 @@ class UrlManager extends \yii\web\UrlManager
     /**
      * @inheritdoc
      */
-    private $_ruleCache;
+    protected $_ruleCache;
 
 
     /**
@@ -38,6 +38,14 @@ class UrlManager extends \yii\web\UrlManager
             $this->languages = [$matches[1] => Yii::$app->language];
         }
         parent::init();
+    }
+
+    /**
+     * Возвращает язык по умолчанию
+     * @return string язык по умолчанию
+     */
+    public function getDefaultLanguage(): string {
+        return Yii::$app->language;
     }
 
     /**
@@ -85,9 +93,12 @@ class UrlManager extends \yii\web\UrlManager
     public function createUrl($params)
     {
         $params = (array) $params;
-        $defaultLanguage = array_search(Yii::$app->language, $this->languages);
-        $defaultLanguage = Yii::$app->language;
-        $language = isset($params[$this->languageParam]) ? $params[$this->languageParam] : $defaultLanguage;
+        $language = isset($params[$this->languageParam]) ? $params[$this->languageParam] : $this->getDefaultLanguage();
+
+        if(empty($language)){
+            return parent::createUrl($params);
+        }
+
         $anchor = isset($params['#']) ? '#' . $params['#'] : '';
         unset($params[$this->languageParam], $params['#'], $params[$this->routeParam]);
 
